@@ -57,4 +57,14 @@ attempt(5.times)
 	# Do something
 end
 ```
+
+Of course, you can combine multiple options together:
+```ruby
+attempt(3.times)
+.with_delay(30)
+.with_reset(->{rollback})
+.and_default_to(->{is_failed = true}) do
+    # Do something
+end
+```
 Enjoy! And feel free to contribute; just make sure you haven't broken any tests by running 'rake' from project's root.
