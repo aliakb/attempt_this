@@ -5,6 +5,19 @@ module AttemptThis
 	# Retry policy implementation.
 	# This class is internal and is not supposed to be used outside of the module.
 	class AttemptObject
+		@@scenarios = {}					# All registered scenarios
+
+		# Resets all static data.
+		def self.reset
+			@@scenarios = {}
+		end
+
+		def self.get_object(id_or_enumerator)
+			impl = @@scenarios[id_or_enumerator]
+			impl ||= AttemptObject.new(id_or_enumerator)
+			impl
+		end
+
 		# Initializes object with enumerator.
 		def initialize(enumerator)
 			@enumerator = enumerator
@@ -20,6 +33,7 @@ module AttemptThis
 				@reset_method = ->{} unless @reset_method
 				@exception_filter = ExceptionTypeFilter.new([StandardError]) unless @exception_filter 
 
+				@enumerator.rewind
 				@enumerator.each do
 					@delay_policy.call unless first_time
 					last_exception = nil
@@ -107,6 +121,14 @@ module AttemptThis
 
 			@exception_filter = ExceptionTypeFilter.new(exceptions)
 			attempt(block)
+		end
+
+		# Creates a scenario with the given id.
+		def scenario(id)
+			raise(ArgumentError, 'Blank id!') if id.nil? || id.empty?
+			raise(ArgumentError, "There is already a scenario with id #{id}") if @@scenarios.has_key?(id)
+
+			@@scenarios[id] = self
 		end
 	end
 end

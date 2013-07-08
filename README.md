@@ -67,4 +67,18 @@ attempt(3.times)
     # Do something
 end
 ```
+
+Finally, you can store various configurations as scenarios and use them by name. This is useful when you need different approaches for specific cases (handling HTTP failures, for example). But remember that you should register your scenarios before using them:
+
+```ruby
+# Run this code when the application starts
+AttemptThis.attempt(5.times).with_filter(*RECOVERABLE_HTTP_ERRORS).scenario(:http)
+
+
+# And run this from your method:
+attempt(:http) do
+	# Make an HTTP call
+end
+```
+
 Enjoy! And feel free to contribute; just make sure you haven't broken any tests by running 'rake' from project's root.
