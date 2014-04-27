@@ -11,6 +11,14 @@ module AttemptThis
     impl.attempt(block)
   end
 
+  def enabled?
+    @enabled.nil? || @enabled
+  end
+
+  def enabled=(value)
+    @enabled = value
+  end
+
   # Resets all static data (scenarios). This is intended to use by tests only (to reset scenarios)
   def self.reset
     AttemptObject.reset

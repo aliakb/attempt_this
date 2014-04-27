@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name				= 'attempt_this'
-  s.version			= '0.9.1'
-  s.date				= '2014-02-18'
+  s.version			= '1.0.0'
+  s.date				= '2014-04-27'
   s.summary			= 'Retry policy mix-in'
   s.description		= <<EOM
 Retry policy mix-in with configurable number of attempts, delays, exception filters, and fall back strategies.

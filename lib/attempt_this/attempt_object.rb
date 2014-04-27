@@ -27,6 +27,7 @@ module AttemptThis
     def attempt(block)
       # Returning self will allow chaining calls
       return self unless block
+      return block.call unless AttemptThis.enabled?
 
       last_exception = nil
       first_time = true

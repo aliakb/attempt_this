@@ -68,8 +68,7 @@ attempt(3.times)
 end
 ```
 
-Finally, you can store various configurations as scenarios and use them by name. This is useful when you need different approaches for specific cases (handling HTTP failures, for example). But remember that you should register your scenarios before using them:
-
+You can store various configurations as scenarios and use them by name. This is useful when you need different approaches for specific cases (handling HTTP failures, for example). But remember that you should register your scenarios before using them:
 ```ruby
 # Run this code when the application starts
 AttemptThis.attempt(5.times).with_filter(*RECOVERABLE_HTTP_ERRORS).scenario(:http)
@@ -83,5 +82,15 @@ end
 
 # Return values
 Calling 'attempt' will return result of the code block if there was no exception; otherwise it will return result of the default handler.
+
+# Debugging
+You may want to disable all retries and let everything fail on the very first attempt as if there was no rerty policy at all; this is useful for debugging (consider investigating an issue inside a code block that should be retried for 20 minutes before the exception surfaces). In this case you can simply disable all retry policies in your project by setting global "enabled" property:
+```ruby
+# Disable all retry policies for now...
+AttemptThis.enabled = false
+
+puts AttemptThis.enabled?
+```
+
 
 Enjoy! And feel free to contribute; just make sure you haven't broken any tests by running 'rake' from project's root.

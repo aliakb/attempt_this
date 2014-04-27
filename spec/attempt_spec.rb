@@ -293,4 +293,58 @@ describe AttemptThis do
       count.should eql(3)
     end
   end
+
+  context 'enabled' do
+    class TestAttempt
+      include AttemptThis
+    end
+
+    subject{TestAttempt.new}
+
+    it 'should be true initially' do
+      subject.enabled?.should be_true
+    end
+
+    it 'should accept true' do
+      subject.enabled = true
+      subject.enabled?.should be_true
+    end
+
+    it 'should accept false' do
+      subject.enabled = false
+      subject.enabled?.should be_false
+    end
+
+    it 'should change from true to false' do
+      subject.enabled = true
+      subject.enabled = false
+      subject.enabled?.should be_false
+    end
+
+    it 'should change from false to true' do
+      subject.enabled = false
+      subject.enabled = true
+      subject.enabled?.should be_true
+    end
+
+    context 'when disabled' do
+      before(:each) do
+        AttemptThis.stub(:enabled?).and_return(false)
+      end
+
+      it 'should yield in the simplest case' do
+        expect{|b| attempt(3.times, &b)}.to yield_control
+      end
+
+      it 'should yield with chained calls' do
+        expect{|b| attempt(3.times).with_delay(100, &b)}.to yield_control
+      end
+
+      it 'should not retry' do
+        count = 0
+        expect{attempt(3.times) {count += 1; raise 'Test'}}.to raise_error('Test')
+        count.should eql(1)
+      end
+    end
+  end
 end

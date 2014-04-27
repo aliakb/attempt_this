@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    attempt_this (0.9.1)
+    attempt_this (1.0.0)
 
 GEM
   remote: http://rubygems.org/
