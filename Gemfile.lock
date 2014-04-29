@@ -1,15 +1,13 @@
 PATH
   remote: .
   specs:
-    attempt_this (1.0.0)
+    attempt_this (1.0.1)
 
 GEM
   remote: http://rubygems.org/
   specs:
     diff-lcs (1.2.4)
     docile (1.1.2)
-    macaddr (1.6.1)
-      systemu (~> 2.5.0)
     multi_json (1.8.4)
     rake (10.1.1)
     rspec (2.13.0)
@@ -25,18 +23,15 @@ GEM
       multi_json
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
-    systemu (2.5.2)
-    uuid (2.3.7)
-      macaddr (~> 1.0)
 
 PLATFORMS
+  java
   ruby
   x86-mingw32
 
 DEPENDENCIES
   attempt_this!
-  bundler
-  rake
-  rspec
-  simplecov
-  uuid
+  bundler (~> 1.6)
+  rake (~> 10.1)
+  rspec (~> 2.13)
+  simplecov (~> 0.8)

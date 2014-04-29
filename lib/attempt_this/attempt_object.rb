@@ -1,5 +1,5 @@
-require_relative 'binary_backoff_policy.rb'
-require_relative 'exception_type_filter.rb'
+require './lib/attempt_this/binary_backoff_policy.rb'
+require './lib/attempt_this/exception_type_filter.rb'
 
 module AttemptThis
   # Retry policy implementation.
@@ -29,29 +29,17 @@ module AttemptThis
       return self unless block
       return block.call unless AttemptThis.enabled?
 
-      last_exception = nil
-      first_time = true
+      apply_defaults
 
-      @delay_policy = ->{} unless @delay_policy
-      @reset_method = ->{} unless @reset_method
-      @exception_filter = ExceptionTypeFilter.new([StandardError]) unless @exception_filter
-
-      @enumerator.rewind
-      @enumerator.with_index do |i|
-        @delay_policy.call unless i == 0
-        last_exception = nil
-        begin
-          return block.call
-        rescue Exception => ex
-          raise unless @exception_filter.include?(ex)
-          @reset_method.call
-          last_exception = ex
-        end
+      # Retriable attempts require special error handling
+      result = each_retriable_attempt do
+        return attempt_with_reset(&block)
       end
 
-      if (last_exception)
-        return @default_method[] if @default_method
-        raise last_exception
+      # Final attempt
+      if (result != :empty)
+        @delay_policy.call unless result == :skipped
+        final_attempt(&block)
       end
     end
 
@@ -69,7 +57,7 @@ module AttemptThis
         raise(ArgumentError, "Delay should be either an number or a range of numbers; got #{delay}!")
       end
       raise(ArgumentError, 'Delay policy has already been specified!') if @delay_policy
-      @delay_policy = ->{Kernel.sleep(rand(delay))}
+      @delay_policy = lambda{Kernel.sleep(delay.first + rand(delay.count))}
 
       attempt(block)
     end
@@ -118,10 +106,52 @@ module AttemptThis
 
     # Creates a scenario with the given id.
     def scenario(id)
-      raise(ArgumentError, 'Blank id!') if id.nil? || id.empty?
+      raise(ArgumentError, 'Nil id!') if id.nil?
       raise(ArgumentError, "There is already a scenario with id #{id}") if @@scenarios.has_key?(id)
 
       @@scenarios[id] = self
+    end
+
+    private
+
+
+    def final_attempt(&block)
+      attempt_with_reset(&block)
+    rescue Exception => ex
+      raise unless @default_method
+      raise unless @exception_filter.include?(ex)
+      @default_method.call
+    end
+
+    def apply_defaults
+      @delay_policy = lambda{} unless @delay_policy
+      @reset_method = lambda{} unless @reset_method
+      @exception_filter = ExceptionTypeFilter.new([StandardError]) unless @exception_filter
+    end
+
+    def each_retriable_attempt(&block)
+      result = :empty
+      @enumerator.each do
+        if (result == :empty)
+          result = :skipped
+          next
+        end
+        @delay_policy.call unless result == :skipped
+        result = :attempted
+        begin
+          block.call
+        rescue Exception => ex
+          raise unless @exception_filter.include?(ex)
+        end
+      end
+      result
+    end
+
+    def attempt_with_reset(&block)
+      block.call
+    rescue Exception => ex
+      @reset_method.call
+      raise
     end
   end
 end
