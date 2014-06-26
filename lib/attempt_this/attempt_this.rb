@@ -1,5 +1,3 @@
-require 'attempt_this/attempt_object.rb'
-
 module AttemptThis
   extend self
 
