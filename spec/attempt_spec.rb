@@ -15,7 +15,7 @@ describe AttemptThis do
     it 'should execute code block' do
       was_called = false
       attempt(1.times) {was_called = true}
-      was_called.should be_true
+      was_called.should be true
     end
 
     it 'should execute the code block only once' do
@@ -87,7 +87,7 @@ describe AttemptThis do
       attempt(3.times).with_delay(1) do
         was_called = true
       end
-      was_called.should be_true
+      was_called.should be true
     end
 
     it 'should not sleep on success' do
@@ -151,7 +151,7 @@ describe AttemptThis do
       was_called = false
       attempt(1.times).with_reset(lambda{}) { was_called = true }
 
-      was_called.should be_true
+      was_called.should be true
     end
 
     it 'should reject multiple reset procs' do
@@ -162,7 +162,7 @@ describe AttemptThis do
       was_called = false
 
       attempt(1.times).with_reset(lambda{ was_called = true }) {}
-      was_called.should be_false
+      was_called.should be false
     end
 
     it 'should be called on each failure' do
@@ -190,13 +190,13 @@ describe AttemptThis do
       was_called = false
       attempt(3.times).and_default_to(lambda{}){ was_called = true }
 
-      was_called.should be_true
+      was_called.should be true
     end
 
     it 'should not be called on success' do
       was_called = false
       attempt(3.times).and_default_to(lambda{ was_called = true }) {}
-      was_called.should be_false
+      was_called.should be false
     end
 
     it 'should be called once on the failure' do
@@ -211,7 +211,7 @@ describe AttemptThis do
       was_called = false
 
       attempt(3.times).and_default_to(lambda{ was_called = true }) { call_count += 1; raise 'Test' if call_count < 2 }
-      was_called.should be_false
+      was_called.should be false
     end
   end
 
@@ -244,7 +244,7 @@ describe AttemptThis do
       was_called = false
 
       attempt(3.times).with_binary_backoff(1) { was_called = true }
-      was_called.should be_true
+      was_called.should be true
     end
 
     it 'should double delay on each failure' do
@@ -272,7 +272,7 @@ describe AttemptThis do
     it 'should call code within the block' do
       was_called = false
       attempt(2.times).with_filter(Exception){ was_called = true }
-      was_called.should be_true
+      was_called.should be true
     end
 
     it 'should ignore other exceptions' do
@@ -302,29 +302,29 @@ describe AttemptThis do
     subject{TestAttempt.new}
 
     it 'should be true initially' do
-      subject.enabled?.should be_true
+      subject.enabled?.should be true
     end
 
     it 'should accept true' do
       subject.enabled = true
-      subject.enabled?.should be_true
+      subject.enabled?.should be true
     end
 
     it 'should accept false' do
       subject.enabled = false
-      subject.enabled?.should be_false
+      subject.enabled?.should be false
     end
 
     it 'should change from true to false' do
       subject.enabled = true
       subject.enabled = false
-      subject.enabled?.should be_false
+      subject.enabled?.should be false
     end
 
     it 'should change from false to true' do
       subject.enabled = false
       subject.enabled = true
-      subject.enabled?.should be_true
+      subject.enabled?.should be true
     end
 
     context 'when disabled' do
