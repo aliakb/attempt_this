@@ -1,4 +1,4 @@
-require 'attempt_this/attempt_object.rb'
+require 'attempt_this/attempt_object'
 
 module AttemptThis
   extend self

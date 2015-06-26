@@ -1,3 +1,5 @@
 .idea/*
 attempt_this-*.gem
 coverage/*
+/Gemfile.lock
+

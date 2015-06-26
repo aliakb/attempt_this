@@ -1,7 +1,10 @@
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 Gem::Specification.new do |s|
   s.name        = 'attempt_this'
-  s.version     = '1.0.1'
-  s.date        = '2014-04-29'
+  s.version     = '1.0.2'
+  s.date        = '2015-06-22'
   s.summary     = 'Retry policy mix-in'
   s.description = <<EOM
 Retry policy mix-in with configurable number of attempts, delays, exception filters, and fall back strategies.
