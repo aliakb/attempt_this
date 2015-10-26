@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    attempt_this (1.0.1)
+    attempt_this (1.0.3)
 
 GEM
   remote: http://rubygems.org/
@@ -35,3 +35,6 @@ DEPENDENCIES
   rake (~> 10.1)
   rspec (~> 2.13)
   simplecov (~> 0.8)
+
+BUNDLED WITH
+   1.10.6

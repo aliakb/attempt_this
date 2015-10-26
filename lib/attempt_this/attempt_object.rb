@@ -1,5 +1,5 @@
-require './lib/attempt_this/binary_backoff_policy.rb'
-require './lib/attempt_this/exception_type_filter.rb'
+require 'attempt_this/binary_backoff_policy.rb'
+require 'attempt_this/exception_type_filter.rb'
 
 module AttemptThis
   # Retry policy implementation.
